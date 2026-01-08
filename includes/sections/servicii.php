@@ -30,7 +30,7 @@
                 <!-- Image Section -->
                 <div class="relative h-48 overflow-hidden">
                     <!-- Background Image -->
-                    <img src="includes/img/categoria-a.png" alt="Categoria A - Autoturisme" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <img src="<?php echo $baseUrl; ?>includes/img/categoria-a.png" alt="Categoria A - Autoturisme" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <!-- Gradient Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-br from-yellow-400/60 to-yellow-500/80"></div>
                     <!-- Category Badge -->
@@ -89,7 +89,7 @@
                 <!-- Image Section -->
                 <div class="relative h-48 overflow-hidden">
                     <!-- Background Image -->
-                    <img src="includes/img/categoria-b.png" alt="Categoria B - Autoturisme" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <img src="<?php echo $baseUrl; ?>includes/img/categoria-b.png" alt="Categoria B - Autoturisme" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <!-- Gradient Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/60 to-yellow-600/80"></div>
                     <!-- Category Badge -->
@@ -148,7 +148,7 @@
                 <!-- Image Section -->
                 <div class="relative h-48 overflow-hidden">
                     <!-- Background Image -->
-                    <img src="includes/img/categoria-c.png" alt="Categoria C - Autoturisme" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <img src="<?php echo $baseUrl; ?>includes/img/categoria-c.png" alt="Categoria C - Autoturisme" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <!-- Gradient Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-br from-yellow-600/60 to-yellow-700/80"></div>
                     <!-- Category Badge -->
@@ -207,7 +207,7 @@
                 <!-- Image Section -->
                 <div class="relative h-48 overflow-hidden">
                     <!-- Background Image -->
-                    <img src="includes/img/categoria-d.png" alt="Categoria D - Autoturisme" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <img src="<?php echo $baseUrl; ?>includes/img/categoria-d.png" alt="Categoria D - Autoturisme" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <!-- Gradient Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-br from-yellow-700/60 to-yellow-800/80"></div>
                     <!-- Category Badge -->
@@ -281,3 +281,4 @@
         </div>
     </div>
 </section>
+

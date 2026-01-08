@@ -1,13 +1,28 @@
 <?php
 // Configurație comună pentru toate orașele
 
+// Detect base path from REQUEST_URI (e.g., /comand/ or /)
+$requestUri = $_SERVER['REQUEST_URI'];
+$requestPath = parse_url($requestUri, PHP_URL_PATH);
+$basePath = '';
+if (strpos($requestPath, '/comand/') !== false || strpos($requestPath, '/comand') === 0) {
+    $basePath = '/comand';
+} elseif (strpos($requestPath, '/evacuator.md/') !== false) {
+    $basePath = '/evacuator.md';
+}
+
+// Parse path parts
+$pathParts = explode('/', trim($requestPath, '/'));
+
+// Adjust pathParts based on basePath (remove base path from parts)
+if ($basePath && !empty($pathParts[0]) && $pathParts[0] === ltrim($basePath, '/')) {
+    $pathParts = array_slice($pathParts, 1);
+}
+
 // Gestionare limbi (ro/ru) - din URL path sau GET parameter
 $lang = 'ro'; // default
 
-// Detect language from URL path (e.g., /ro/ or /ru/)
-$requestUri = $_SERVER['REQUEST_URI'];
-$pathParts = explode('/', trim(parse_url($requestUri, PHP_URL_PATH), '/'));
-
+// Detect language from URL path (e.g., /ro/ or /ru/ or /comand/ro/)
 if (!empty($pathParts[0]) && in_array($pathParts[0], ['ro', 'ru'])) {
     $lang = $pathParts[0];
 } elseif (isset($_GET['lang']) && in_array($_GET['lang'], ['ro', 'ru'])) {
@@ -19,13 +34,22 @@ if (!empty($pathParts[0]) && in_array($pathParts[0], ['ro', 'ru'])) {
 // Set cookie
 setcookie('lang', $lang, time() + (365 * 24 * 60 * 60), '/');
 
-// Detect city from URL path if in format /ro/oras/{city}
+// Detect city from URL path if in format /ro/oras/{city} or /comand/ro/oras/{city}
 $cityName = 'Chișinău'; // default
-if (!empty($pathParts[1]) && $pathParts[1] === 'oras' && !empty($pathParts[2])) {
-    $cityName = htmlspecialchars(trim(urldecode($pathParts[2])));
-} elseif (isset($_GET['city'])) {
-    $cityName = htmlspecialchars(trim($_GET['city']));
+
+// First try to get from GET parameter (from .htaccess rewrite)
+if (isset($_GET['city'])) {
+    $cityName = htmlspecialchars(trim(urldecode($_GET['city'])));
 }
+// Then try from URL path
+elseif (!empty($pathParts[0]) && in_array($pathParts[0], ['ro', 'ru'])) {
+    if (!empty($pathParts[1]) && $pathParts[1] === 'oras' && !empty($pathParts[2])) {
+        $cityName = htmlspecialchars(trim(urldecode($pathParts[2])));
+    }
+}
+
+// Base URL for assets
+$baseUrl = $basePath . '/';
 
 // Traduceri
 $translations = [
@@ -405,15 +429,16 @@ function getCitySlug($cityName) {
 
 // Funcție pentru a genera URL-uri cu prefix de limbă
 function getLangUrl($path = '', $params = []) {
-    global $lang;
-    $basePath = '/' . $lang . '/';
+    global $lang, $basePath;
+    $urlBasePath = $basePath ? $basePath . '/' : '';
+    $langPath = $urlBasePath . $lang . '/';
     
-    // Handle special case for oras.php -> oras/{city}
+    // Handle special case for oras.php -> {city} (short URL format)
     if ($path === 'oras.php' && isset($params['city'])) {
         $city = $params['city'];
         // Convert city name to URL-friendly format
         $citySlug = urlencode($city);
-        return $basePath . 'oras/' . $citySlug;
+        return $langPath . $citySlug;
     }
     
     // Remove .php extension
@@ -422,7 +447,7 @@ function getLangUrl($path = '', $params = []) {
     }
     
     if ($path && $path !== 'index') {
-        $basePath .= ltrim($path, '/');
+        $langPath .= ltrim($path, '/');
     }
     
     // Add other params if any (excluding city which is in path)
@@ -430,10 +455,10 @@ function getLangUrl($path = '', $params = []) {
     unset($otherParams['city']);
     if (!empty($otherParams)) {
         $queryString = http_build_query($otherParams);
-        $basePath .= '?' . $queryString;
+        $langPath .= '?' . $queryString;
     }
     
-    return $basePath;
+    return $langPath;
 }
 ?>
 

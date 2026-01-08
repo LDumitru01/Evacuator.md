@@ -5,16 +5,7 @@
             <!-- Logo Section -->
             <div class="flex items-center gap-2 sm:gap-3">
                 <a href="<?php echo getLangUrl('index.php'); ?>" class="flex items-center gap-2 sm:gap-3 group">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-500 rounded-lg flex items-center justify-center group-hover:bg-yellow-600 transition-colors flex-shrink-0">
-                        <svg class="w-5 h-5 sm:w-7 sm:h-7 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path>
-                            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-sm sm:text-lg md:text-xl font-bold text-gray-900"><?php echo t('evacuator'); ?> Auto</div>
-                        <div class="text-[10px] sm:text-xs text-gray-500"><?php echo t('moldova'); ?></div>
-                    </div>
+                    <img src="<?php echo $baseUrl; ?>includes/img/logo_evacuator.png" alt="Evacuator Auto" class="h-10 sm:h-14 md:h-16 object-contain flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
                 </a>
             </div>
 
@@ -92,15 +83,22 @@
         let path = window.location.pathname;
         let search = window.location.search;
         
+        // Detect base path (e.g., /comand/)
+        let basePath = '';
+        if (path.indexOf('/comand/') === 0) {
+            basePath = '/comand';
+            path = path.substring(7); // Remove /comand
+        }
+        
         // Remove existing language prefix if any
         path = path.replace(/^\/(ro|ru)\//, '/');
         path = path.replace(/^\/(ro|ru)$/, '/');
         
         // Add new language prefix
         if (path === '/' || path === '') {
-            path = '/' + lang + '/';
+            path = basePath + '/' + lang + '/';
         } else {
-            path = '/' + lang + path;
+            path = basePath + '/' + lang + path;
         }
         
         // Remove lang parameter from search if exists

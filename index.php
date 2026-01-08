@@ -1,10 +1,10 @@
 <?php
-// Detect language from cookie or default to ro
-$lang = isset($_COOKIE['lang']) && in_array($_COOKIE['lang'], ['ro', 'ru']) ? $_COOKIE['lang'] : 'ro';
+// Include configurația comună pentru a avea acces la funcția getLangUrl
+require_once 'includes/config.php';
 
 // Redirecționează către pagina principală pentru Chișinău cu limba în URL
 $citySlug = urlencode('Chișinău');
-header('Location: /' . $lang . '/oras/' . $citySlug);
+header('Location: ' . getLangUrl('oras.php', ['city' => 'Chișinău']));
 exit;
 ?>
 

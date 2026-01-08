@@ -1,32 +1,43 @@
 RewriteEngine On
 
-# Redirect root to /ro/
-RewriteCond %{REQUEST_URI} ^/$
-RewriteRule ^(.*)$ /ro/ [R=301,L]
+# Enable following symbolic links (if needed)
+Options +FollowSymLinks
 
-# Remove .php extension
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)\.php$ /$1 [R=301,L]
+# Base directory for rewrites (since .htaccess is in /comand/)
+RewriteBase /comand/
 
-# Handle /ro/oras/{city} format
+# Handle /comand/ro/{city} format (short URL without /oras/)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(ro|ru)/oras/([^/]+)/?$ oras.php?lang=$1&city=$2 [L,QSA]
+RewriteRule ^(ro|ru)/([^/]+)/?$ oras.php?lang=$1&city=$2 [L,QSA,B]
 
-# Handle /ro/index or /ro/ format
+# Handle /comand/ro/oras/{city} format - match encoded or unencoded city names
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(ro|ru)/oras/(.+)/?$ oras.php?lang=$1&city=$2 [L,QSA,B]
+
+# Handle /comand/ro/ or /comand/ru/ format (root with language)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(ro|ru)/?$ index.php?lang=$1 [L,QSA]
 
-# Handle /ro/{file} format (for other files)
+# Handle /comand/ro/{file} format (for other files like CSS, JS, images)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(ro|ru)/(.+)$ $2?lang=$1 [L,QSA]
 
-# If no language prefix, redirect to /ro/
+# Redirect /comand/ to /comand/ro/ (default language)
+RewriteCond %{REQUEST_URI} ^/comand/$
+RewriteRule ^(.*)$ /comand/ro/ [R=301,L]
+
+# Redirect root to /comand/ro/ (if accessing site root)
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^(.*)$ /comand/ro/ [R=301,L]
+
+# If /comand/ but no language prefix, redirect to /comand/ro/
+RewriteCond %{REQUEST_URI} ^/comand/
+RewriteCond %{REQUEST_URI} !^/comand/(ro|ru)/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/(ro|ru)/
 RewriteCond %{QUERY_STRING} !lang=
-RewriteRule ^(.*)$ /ro/$1 [R=301,L,QSA]
+RewriteRule ^comand/(.*)$ /comand/ro/$1 [R=301,L,QSA]
