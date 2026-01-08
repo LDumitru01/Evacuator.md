@@ -1,0 +1,32 @@
+RewriteEngine On
+
+# Redirect root to /ro/
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^(.*)$ /ro/ [R=301,L]
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)\.php$ /$1 [R=301,L]
+
+# Handle /ro/oras/{city} format
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(ro|ru)/oras/([^/]+)/?$ oras.php?lang=$1&city=$2 [L,QSA]
+
+# Handle /ro/index or /ro/ format
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(ro|ru)/?$ index.php?lang=$1 [L,QSA]
+
+# Handle /ro/{file} format (for other files)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(ro|ru)/(.+)$ $2?lang=$1 [L,QSA]
+
+# If no language prefix, redirect to /ro/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/(ro|ru)/
+RewriteCond %{QUERY_STRING} !lang=
+RewriteRule ^(.*)$ /ro/$1 [R=301,L,QSA]
